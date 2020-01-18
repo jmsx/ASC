@@ -1,10 +1,9 @@
 import numpy
 from utiles import *
 from funciones import *
-import matplotlib.pyplot as plt
 import random
 
-N = 10
+N = 100
 T = 3
 espacio = (0, 1)
 generaciones = 100
@@ -40,24 +39,29 @@ for i in range(0, len(F)):
     Z = numpy.minimum(F[i][:], Z)
 
 
+
+pareto = cargaPareto()
+creaFoto(0, F, Z, pareto)
+
 #Iteraccion
-for i in range(0, N):
-    v1 = X[int(random.choice(vecinos[i]))]
-    v2 = X[int(random.choice(vecinos[i]))]
-    v3 = X[int(random.choice(vecinos[i]))]
-    y = muta_y_cruza(v1, v2, v3)
-    Fy = numpy.empty((2,))
-    Fy[0] = ZDT3_f1(y)
-    Fy[1] = ZDT3_f2(y)
-    Z = numpy.minimum(Fy, Z)
-    F_agregacion = g_te(F[i][:], pesos[i][:], Z)
-    Fy_agregacion = g_te(Fy, pesos[i][:], Z)
-    if Fy_agregacion < F_agregacion:
-        X[i] = y
-        print(str(i) + " es mejor")
-        F[i][:] = Fy
-    
+for j in range(0, generaciones):
+    for i in range(0, N):
+        v1 = X[int(random.choice(vecinos[i]))]
+        v2 = X[int(random.choice(vecinos[i]))]
+        v3 = X[int(random.choice(vecinos[i]))]
+        y = muta_y_cruza(v1, v2, v3, espacio)
+        Fy = numpy.empty((2,))
+        Fy[0] = ZDT3_f1(y)
+        Fy[1] = ZDT3_f2(y)
+        Z = numpy.minimum(Fy, Z)
+        F_agregacion = g_te(F[i][:], pesos[i][:], Z)
+        Fy_agregacion = g_te(Fy, pesos[i][:], Z)
+        if Fy_agregacion < F_agregacion:
+            X[i] = y
+            F[i][:] = Fy
+    creaFoto(j + 1, F, Z, pareto)
+    print(j)
 
 
 
-
+creaGif()
