@@ -9,6 +9,7 @@ espacio = (0, 1)
 generaciones = 100
 dimension = 30
 CR = 0.5
+Fm = 0.5
 # Generar vectores pesos
 pesos = numpy.empty((N, 2))
 for i in range(0, N):
@@ -47,10 +48,14 @@ creaFoto(0, F, Z, pareto)
 #Iteraccion
 for j in range(0, generaciones):
     for i in range(0, N):
-        v1 = X[int(random.choice(vecinos[i]))]
-        v2 = X[int(random.choice(vecinos[i]))]
-        v3 = X[int(random.choice(vecinos[i]))]
-        y = muta_y_cruza(X[i] ,v1, v2, v3, espacio, CR)
+        while True:
+            v1 = X[int(random.choice(vecinos[i]))]
+            v2 = X[int(random.choice(vecinos[i]))]
+            v3 = X[int(random.choice(vecinos[i]))]
+            if (v1 is not v2) and (v2 is not v3):
+                break
+        
+        y = muta_y_cruza(X[i] ,v1, v2, v3, espacio, CR , Fm)
         Fy = numpy.empty((2,))
         Fy[0] = ZDT3_f1(y)
         Fy[1] = ZDT3_f2(y)

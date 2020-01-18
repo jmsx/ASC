@@ -30,11 +30,11 @@ def g_te(F, pesos, Z):
         aux[i] = pesos[i] * abs(F[i] - Z[i])
     return numpy.amax(aux)
 
-def muta_y_cruza(y, v1, v2, v3, espacio, CR):
+def muta_y_cruza(y, v1, v2, v3, espacio, CR, fm):
     v1 = numpy.array(v1)
     v2 = numpy.array(v2)
     v3 = numpy.array(v3)
-    F = 0.5
+    F = fm
     v = v1 + F * (v2 - v3)
 
     for i in range(0, len(v)):
@@ -42,6 +42,7 @@ def muta_y_cruza(y, v1, v2, v3, espacio, CR):
         if rnd <= CR:
             y[i] = v[i]
 
+    y = mutacion_gausiana(y, espacio)
 
     for i in range(0, len(y)):
         if y[i] < espacio[0]:
@@ -49,6 +50,15 @@ def muta_y_cruza(y, v1, v2, v3, espacio, CR):
         elif y[i] > espacio[1]:
              y[i] = espacio[1]
     return y 
+
+def mutacion_gausiana(y, espacio):
+    o = (espacio[1] - espacio[0]) / 20.0
+    for i in range(0, len(y)):
+        rnd = numpy.random.random_sample()
+        if rnd <= (1/len(y)):
+            aux = y[i]
+            y[i] +=  numpy.random.normal(0.0, o)
+    return y
 
 def creaGif():
 
