@@ -9,6 +9,7 @@ def ZDT3_f2(X):
     f1 = ZDT3_f1(X)
     
     f2 = g*ZDT3_h(f1, g)
+
     return f2
 
 def ZDT3_g(X):

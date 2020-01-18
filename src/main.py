@@ -4,10 +4,11 @@ from funciones import *
 import random
 
 N = 100
-T = 3
+T = 25
 espacio = (0, 1)
 generaciones = 100
 dimension = 30
+CR = 0.5
 # Generar vectores pesos
 pesos = numpy.empty((N, 2))
 for i in range(0, N):
@@ -49,7 +50,7 @@ for j in range(0, generaciones):
         v1 = X[int(random.choice(vecinos[i]))]
         v2 = X[int(random.choice(vecinos[i]))]
         v3 = X[int(random.choice(vecinos[i]))]
-        y = muta_y_cruza(v1, v2, v3, espacio)
+        y = muta_y_cruza(X[i] ,v1, v2, v3, espacio, CR)
         Fy = numpy.empty((2,))
         Fy[0] = ZDT3_f1(y)
         Fy[1] = ZDT3_f2(y)
