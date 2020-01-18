@@ -4,7 +4,7 @@ from funciones import *
 import random
 
 N = 100
-T = 25
+T = 30
 espacio = (0, 1)
 generaciones = 100
 dimension = 30
@@ -45,7 +45,11 @@ for i in range(0, len(F)):
 pareto = cargaPareto()
 creaFoto(0, F, Z, pareto)
 
+agregaciones = numpy.empty((N, ))
+for i in range(0, N):
+    agregaciones[i] = g_te(F[i][:], pesos[i][:], Z)
 #Iteraccion
+
 for j in range(0, generaciones):
     for i in range(0, N):
         while True:
@@ -61,10 +65,18 @@ for j in range(0, generaciones):
         Fy[1] = ZDT3_f2(y)
         Z = numpy.minimum(Fy, Z)
         F_agregacion = g_te(F[i][:], pesos[i][:], Z)
-        Fy_agregacion = g_te(Fy, pesos[i][:], Z)
+        Fy_agregacion = g_te(Fy, pesos[i][:], Z) 
         if Fy_agregacion < F_agregacion:
             X[i] = y
             F[i][:] = Fy
+            agregaciones[i] = Fy_agregacion
+        for t in vecinos[i]:
+            t = int(t)
+            if g_te(Fy, pesos[t][:], Z)  < agregaciones[t]:
+                X[t] = y
+                F[t][:] = Fy
+
+
     creaFoto(j + 1, F, Z, pareto)
     print(j)
 

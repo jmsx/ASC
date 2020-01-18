@@ -85,7 +85,8 @@ def creaFoto(i, F, Z, pareto):
     plt.plot(F[: , 0], F[: , 1], 'bo')
     plt.plot(pareto[: , 0],pareto[: , 1], 'go')
     plt.plot(Z[0], Z[1], 'ro')
-    plt.axis([0, axisF1, -1, axisF2])
-    plt.savefig('img/grafica-' + str(i) + '.png')
+    plt.axis([0, 1, -1, 6])
+    num = '{:05d}'.format(i)
+    plt.savefig('img/grafica-' + num + '.png')
     plt.close()
 
