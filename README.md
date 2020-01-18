@@ -14,7 +14,7 @@ En la primera implementacion del algoritmo con ZDT3 implemento la reproducción 
 </p>
  
  ## Segunda Aproximación   
- En esta segunda aproximacion se usa la mutacion. En la primera cometi el error de usar directamente la combinacion de los 3 vectores vecinos, sin combinarlos con el indiciduo actual, al igual que solo utilizaba 3 vecinos. En esta se han subsanado dichos errores, pero no consigo que el algortiomo llegue al frente de pareto(PF.dat). La unicaforma de que este se acerque es dismuir la dimensionalidad del individuo 30 a 4.  
+En esta segunda aproximacion se usa la mutacion. En la primera cometi el error de usar directamente la combinacion de los 3 vectores vecinos, sin combinarlos con el indiciduo actual, al igual que solo utilizaba 3 vecinos. En esta se han subsanado dichos errores, pero no consigo que el algortiomo llegue al frente de pareto(PF.dat). La unicaforma de que este se acerque es dismuir la dimensionalidad del individuo 30 a 4.  
  
  <p align="center">
   <img width="460" height="300" src="https://i.ibb.co/3cshsPB/grafica-0.png">
@@ -26,6 +26,16 @@ En la primera implementacion del algoritmo con ZDT3 implemento la reproducción 
   </br>
   100 Generaciones (Dimensionalidad 30)
 </p>
+
+## Tercera Aproximación  
+En esta tercera aproximación se ha arreglado la actualizacion de los vecinos.
+
+<p align="center">
+  <img width="460" height="300" src="https://i.ibb.co/xgzkpF9/grafica.gif">
+  </br>
+  100 Generaciones con 100 individuos (Dimensionalidad 30)
+</p>
+
  
  
  
