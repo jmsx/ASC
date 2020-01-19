@@ -5,6 +5,7 @@ import os
 from PIL import Image
 import matplotlib.pyplot as plt
 from shutil import rmtree
+from tqdm import tqdm
 
 def distanciaEuclidea(v1, v2):
     suma = 0
@@ -56,12 +57,11 @@ def mutacion_gausiana(y, espacio):
     for i in range(0, len(y)):
         rnd = numpy.random.random_sample()
         if rnd <= (1/len(y)):
-            aux = y[i]
             y[i] +=  numpy.random.normal(0.0, o)
     return y
 
 def creaGif():
-
+    print("Generando Gif:")
     fp_in = "img/grafica-*.png"
     fp_out = "img/grafica.gif"
     img, *imgs = [Image.open(f) for f in sorted(glob.glob(fp_in))]
@@ -82,11 +82,20 @@ def creaFoto(i, F, Z, pareto):
     axisF1 = numpy.amax(F[: , 0])
     axisF2 = numpy.amax(F[: , 1])
     plt.figure(i)
-    plt.plot(F[: , 0], F[: , 1], 'bo')
     plt.plot(pareto[: , 0],pareto[: , 1], 'go')
+    plt.plot(F[: , 0], F[: , 1], 'bo')
     plt.plot(Z[0], Z[1], 'ro')
     plt.axis([0, 1, -1, 6])
+    plt.ylabel('f2')
+    plt.xlabel('f1')
+    plt.suptitle('Generecion ' + str(i))
     num = '{:05d}'.format(i)
     plt.savefig('img/grafica-' + num + '.png')
     plt.close()
 
+def escribirSalida(lineas, N, generaciones):
+    salida = "out/" + str(N) + "P" + str(generaciones) + "G.out"
+    outF = open(salida, "w")
+    for line in lineas:
+        outF.write(line + "\n")
+    outF.close()

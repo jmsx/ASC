@@ -2,9 +2,10 @@ import numpy
 from utiles import *
 from funciones import *
 import random
+from tqdm import tqdm
 
-N = 100
-T = 30
+N = 50
+T = 25
 espacio = (0, 1)
 generaciones = 100
 dimension = 30
@@ -41,16 +42,27 @@ for i in range(0, len(F)):
     Z = numpy.minimum(F[i][:], Z)
 
 
-
+#Cargar el frente de pareto
 pareto = cargaPareto()
 creaFoto(0, F, Z, pareto)
 
+#Calculo las agregaciones iniciales
 agregaciones = numpy.empty((N, ))
 for i in range(0, N):
     agregaciones[i] = g_te(F[i][:], pesos[i][:], Z)
-#Iteraccion
 
-for j in range(0, generaciones):
+#Array para el fichero de salida
+lineas = list()
+
+#Iteraccion
+print("Evoluciones:")
+for j in tqdm(range(0, generaciones)):
+    #Generando lineas para el archivo de salida
+    
+    for i in range(0, N):
+         lineas.append(str(F[i][0]) + "	" + str(F[i][1]) + "	" + str(float(0)))
+
+    #Evolucionando
     for i in range(0, N):
         while True:
             v1 = X[int(random.choice(vecinos[i]))]
@@ -78,8 +90,7 @@ for j in range(0, generaciones):
 
 
     creaFoto(j + 1, F, Z, pareto)
-    print(j)
 
 
-
+escribirSalida(lineas, N, generaciones)
 creaGif()
