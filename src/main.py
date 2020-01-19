@@ -4,8 +4,8 @@ from funciones import *
 import random
 from tqdm import tqdm
 
-N = 50
-T = 25
+N = 400
+T = 120
 espacio = (0, 1)
 generaciones = 100
 dimension = 30
