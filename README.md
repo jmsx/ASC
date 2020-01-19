@@ -36,6 +36,35 @@ En esta tercera aproximación se ha arreglado la actualizacion de los vecinos.
   100 Generaciones con 100 individuos (Dimensionalidad 30)
 </p>
 
+
+## Cuarta Aproximacion 
+En esta cuarta aproximación. Se ha mejorado la version de las imagenes que genera asi como el gif. El codigo tambien genera archivos de salida para generar metricas.
+
+<p align="center">
+  <img width="460" height="300" src="https://i.ibb.co/dDDkVKF/grafica.gif">
+  </br>
+  100 Generaciones con 400 individuos (Dimensionalidad 30)
+</p>
+
+<p align="center">
+  <img width="460" height="300" src="https://i.ibb.co/F864287/hypervolumen.png">
+  </br>
+  Hypervolumen de dos ejecuciones
+</p>
+
+<p align="center">
+  <img width="460" height="300" src="https://i.ibb.co/Vqzwnm8/spacing.png">
+  </br>
+  Spacing de dos ejecuciones
+</p>
+
+<p align="center">
+  <img width="460" height="300" src="https://i.ibb.co/r7WL3bQ/coverage.png">
+  </br>
+  Coverage set de dos ejecuciones
+</p>
+
+
  
  
  
