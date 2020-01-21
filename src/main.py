@@ -6,11 +6,17 @@ from tqdm import tqdm
 
 N = 200
 T = 30
-espacio = (0, 1)
+espacio = (0, 1, -2, 2)
 generaciones = 50
 dimension = 30
 CR = 0.5
 Fm = 0.5
+
+problema = "ZDT3"
+
+#restricciones incumplidas
+restricciones = numpy.zeros((N, 1))
+
 # Generar vectores pesos
 pesos = numpy.empty((N, 2))
 for i in range(0, N):
@@ -33,8 +39,13 @@ for i in range(0, N):
 #Evalua funciones
 F = numpy.empty((N, 2))
 for i in range(0, len(X)):
-    F[i][0] = ZDT3_f1(X[i][:])
-    F[i][1] = ZDT3_f2(X[i][:])
+    if problema == "ZDT3":
+        F[i][0] = ZDT3_f1(X[i][:])
+        F[i][1] = ZDT3_f2(X[i][:])
+    elif problema == "CF6":
+        F[i][0] = CF6_f1(X[i][:])
+        F[i][1] = CF6_f2(X[i][:])
+        #TODO: contar restricciones
 
 #Inicializa Z
 Z = F[0][:]
@@ -43,7 +54,7 @@ for i in range(0, len(F)):
 
 
 #Cargar el frente de pareto
-pareto = cargaPareto()
+pareto = cargaPareto(problema)
 creaFoto(0, F, Z, pareto)
 
 #Calculo las agregaciones iniciales
@@ -60,7 +71,7 @@ for j in tqdm(range(0, generaciones)):
 
     #Generando lineas para el archivo de salida
     for i in range(0, N):
-         lineas.append(str(F[i][0]) + "	" + str(F[i][1]) + "	" + str(float(0)))
+         lineas.append(str(F[i][0]) + "	" + str(F[i][1]) + "	" + str(float(restricciones[i])))
 
     #Evolucionando
     for i in range(0, N):
@@ -71,13 +82,23 @@ for j in tqdm(range(0, generaciones)):
             if (v1 is not v2) and (v2 is not v3):
                 break
         
-        y = muta_y_cruza(X[i] ,v1, v2, v3, espacio, CR , Fm)
+        y = muta_y_cruza(X[i] ,v1, v2, v3, espacio, CR , Fm, problema)
         Fy = numpy.empty((2,))
-        Fy[0] = ZDT3_f1(y)
-        Fy[1] = ZDT3_f2(y)
+        if problema == "ZDT3":
+            Fy[0] = ZDT3_f1(y)
+            Fy[1] = ZDT3_f2(y)
+        else:
+            Fy[0] = CF6_f1(y)
+            Fy[1] = CF6_f2(y)
+            #TODO: contar restricciones
+
         Z = numpy.minimum(Fy, Z)
         F_agregacion = g_te(F[i][:], pesos[i][:], Z)
         Fy_agregacion = g_te(Fy, pesos[i][:], Z) 
+
+        if "CF6" in problema:
+            pass
+            #TODO: penalizar restricciones
 
         #Comparacion del individuo
         if Fy_agregacion < F_agregacion:
@@ -87,6 +108,7 @@ for j in tqdm(range(0, generaciones)):
         #Altualizando vecinos
         for t in vecinos[i]:
             t = int(t)
+            #TODO: contar restricciones antes de comparar
             if g_te(Fy, pesos[t][:], Z)  < agregaciones[t]:
                 X[t] = y
                 F[t][:] = Fy

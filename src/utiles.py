@@ -31,7 +31,7 @@ def g_te(F, pesos, Z):
         aux[i] = pesos[i] * abs(F[i] - Z[i])
     return numpy.amax(aux)
 
-def muta_y_cruza(y, v1, v2, v3, espacio, CR, fm):
+def muta_y_cruza(y, v1, v2, v3, espacio, CR, fm, problema):
     v1 = numpy.array(v1)
     v2 = numpy.array(v2)
     v3 = numpy.array(v3)
@@ -45,11 +45,24 @@ def muta_y_cruza(y, v1, v2, v3, espacio, CR, fm):
 
     y = mutacion_gausiana(y, espacio)
 
-    for i in range(0, len(y)):
+    #Ajustando al espacio de busqueda
+    if problema == "ZDT3":
+        for i in range(0, len(y)):
+            if y[i] < espacio[0]:
+                y[i] = espacio[0]
+            elif y[i] > espacio[1]:
+                y[i] = espacio[1]
+    else:
         if y[i] < espacio[0]:
             y[i] = espacio[0]
         elif y[i] > espacio[1]:
-             y[i] = espacio[1]
+            y[i] = espacio[1]
+        for i in range(1, len(y)):
+            if y[i] < espacio[2]:
+                y[i] = espacio[2]
+            elif y[i] > espacio[3]:
+                y[i] = espacio[3]
+
     return y 
 
 def mutacion_gausiana(y, espacio):
