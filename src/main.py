@@ -4,10 +4,10 @@ from funciones import *
 import random
 from tqdm import tqdm
 
-N = 400
-T = 120
+N = 200
+T = 30
 espacio = (0, 1)
-generaciones = 100
+generaciones = 50
 dimension = 30
 CR = 0.5
 Fm = 0.5
@@ -57,8 +57,8 @@ lineas = list()
 #Iteraccion
 print("Evoluciones:")
 for j in tqdm(range(0, generaciones)):
+
     #Generando lineas para el archivo de salida
-    
     for i in range(0, N):
          lineas.append(str(F[i][0]) + "	" + str(F[i][1]) + "	" + str(float(0)))
 
@@ -78,19 +78,24 @@ for j in tqdm(range(0, generaciones)):
         Z = numpy.minimum(Fy, Z)
         F_agregacion = g_te(F[i][:], pesos[i][:], Z)
         Fy_agregacion = g_te(Fy, pesos[i][:], Z) 
+
+        #Comparacion del individuo
         if Fy_agregacion < F_agregacion:
             X[i] = y
             F[i][:] = Fy
             agregaciones[i] = Fy_agregacion
+        #Altualizando vecinos
         for t in vecinos[i]:
             t = int(t)
             if g_te(Fy, pesos[t][:], Z)  < agregaciones[t]:
                 X[t] = y
                 F[t][:] = Fy
 
-
+    #Generando grafica de la generacion
     creaFoto(j + 1, F, Z, pareto)
 
-
+#Escribiendo fichero de salida
 escribirSalida(lineas, N, generaciones)
+
+#Generando animacion con las distintas generaciones
 creaGif()
