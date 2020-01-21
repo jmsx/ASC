@@ -66,11 +66,29 @@ En esta cuarta aproximación. Se ha mejorado la version de las imagenes que gene
 
 
  
- 
- 
- 
- 
+ ## Quinta Aproximacion 
+En esta quinta aproximación. Se ha comparado distintas ejecuciones con NSGAII en el problema ZDT3, en todas estas NSGAII mantiene la supremacia sobre el nuestro.
 
+
+<p align="center">
+  <img width="460" height="300" src="https://i.ibb.co/TrSfHRb/coverage.png">
+  </br>
+  Hypervolumen de dos ejecuciones (200P50G)
+</p>
+
+<p align="center">
+  <img width="460" height="300" src="https://i.ibb.co/FxN4fDK/espaciado.png">
+  </br>
+  Spacing de dos ejecuciones (200P50G)
+</p>
+
+<p align="center">
+  <img width="460" height="300" src="https://i.ibb.co/d4h9Qsw/hypervolumen.png">
+  </br>
+  Coverage set de dos ejecuciones (200P50G)
+</p>   
+ 
+Más imágenes en la carpeta metrics de esta <a href="https://github.com/jmsx/ASC/tree/1.2" >release 1.2</a>
 
 
 
