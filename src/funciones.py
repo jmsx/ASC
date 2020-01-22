@@ -24,7 +24,7 @@ def ZDT3_h(f1, g):
     return 1 - sqrt - (f1/g)*math.sin(10*math.pi*f1)
 
 def cargaPareto(problema):
-    fileobj = open("resources\PF_" + problema + ".dat", "r")
+    fileobj = open("resources/PF_" + problema + ".dat", "r")
     pareto = list()
     for line in fileobj.readlines():
         rip = line.split("	")

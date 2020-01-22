@@ -5,7 +5,7 @@ import random
 from tqdm import tqdm
 
 N = 100
-T = 30
+T = 25
 espacio = (0, 1, -2, 2)
 generaciones = 100
 dimension = 30
@@ -118,7 +118,8 @@ for j in tqdm(range(0, generaciones)):
     creaFoto(j + 1, F, Z, pareto)
 
 #Escribiendo fichero de salida
-escribirSalida(lineas, N, generaciones)
-
+escribirSalida(lineas, N, generaciones, problema)
+crearFicheroMetricas(N,  generaciones, problema)
+ejecutaMetricas(N,  generaciones, problema)
 #Generando animacion con las distintas generaciones
 creaGif()

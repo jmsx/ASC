@@ -6,6 +6,10 @@ from PIL import Image
 import matplotlib.pyplot as plt
 from shutil import rmtree
 from tqdm import tqdm
+from os import listdir
+from os.path import isfile, join
+
+
 
 def distanciaEuclidea(v1, v2):
     suma = 0
@@ -76,8 +80,8 @@ def mutacion_gausiana(y, espacio):
 
 def creaGif():
     print("Generando Gif:")
-    fp_in = "img/grafica-*.png"
-    fp_out = "img/grafica.gif"
+    fp_in = "img/generaciones/grafica-*.png"
+    fp_out = "img/generaciones/grafica.gif"
     img, *imgs = [Image.open(f) for f in sorted(glob.glob(fp_in))]
     img.save(fp=fp_out, format='GIF', append_images=imgs,
             save_all=True, duration=100, loop=0)
@@ -85,7 +89,7 @@ def creaGif():
 
 def creaFoto(i, F, Z, pareto):
     if i == 0:
-        folder = 'img' 
+        folder = 'img/generaciones' 
         for the_file in os.listdir(folder):
             file_path = os.path.join(folder, the_file)
             try:
@@ -104,12 +108,55 @@ def creaFoto(i, F, Z, pareto):
     plt.xlabel('f1')
     plt.suptitle('Generecion ' + str(i))
     num = '{:05d}'.format(i)
-    plt.savefig('img/grafica-' + num + '.png')
+    plt.savefig('img/generaciones/grafica-' + num + '.png')
     plt.close()
 
-def escribirSalida(lineas, N, generaciones):
-    salida = "out/" + str(N) + "P" + str(generaciones) + "G.out"
+def escribirSalida(lineas, N, generaciones, problema):
+    salida = "out/" + problema + "/" + str(N) + "P" + str(generaciones) + "G.out"
+
+    try:
+        os.mkdir("out/" + problema)
+    except:
+        pass
+
     outF = open(salida, "w")
     for line in lineas:
         outF.write(line + "\n")
     outF.close()
+
+def crearFicheroMetricas(N,  generaciones, problema):
+    salida = "out/" + str(N) + "P" + str(generaciones) + "G_" + problema + ".in"
+    file1 = "out/" + problema + "/" + str(N) + "P" + str(generaciones) + "G.out"
+
+    mypath = "out/NSGAII_" + problema + "/P" + str(N) + "G" + str(generaciones)
+    onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+    file2 =  mypath + "/" + numpy.random.choice(onlyfiles)
+    lineas = [2, 1, 2, file1, N, generaciones, file2, N, generaciones, 1]
+    outF = open(salida, "w")
+    for line in lineas:
+        outF.write(str(line) + "\n")
+    outF.close()
+
+def ejecutaMetricas(N,  generaciones, problema):
+    folder = "img/metricas/" + str(N) + "P" + str(generaciones) + "G" 
+    try:
+        os.mkdir(folder)
+    except:
+        pass
+
+    for the_file in os.listdir(folder):
+        file_path = os.path.join(folder, the_file)
+        try:
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
+        except:
+            pass
+
+    try:
+        os.mkdir(folder)
+    except:
+        pass
+    cmd = "sudo ./METRICS/metrics < out/" + str(N) + "P" + str(generaciones) + "G_" + problema + ".in" #+ " > /dev/null 2>&1"
+    os.system(cmd)
+
+
