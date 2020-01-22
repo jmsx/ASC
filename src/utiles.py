@@ -37,7 +37,8 @@ def muta_y_cruza(y, v1, v2, v3, espacio, CR, fm, problema):
     v3 = numpy.array(v3)
     F = fm
     v = v1 + F * (v2 - v3)
-
+    
+    y = numpy.array(y)
     for i in range(0, len(v)):
         rnd = numpy.random.random_sample()
         if rnd <= CR:
@@ -79,7 +80,7 @@ def creaGif():
     fp_out = "img/grafica.gif"
     img, *imgs = [Image.open(f) for f in sorted(glob.glob(fp_in))]
     img.save(fp=fp_out, format='GIF', append_images=imgs,
-            save_all=True, duration=400, loop=0)
+            save_all=True, duration=100, loop=0)
 
 
 def creaFoto(i, F, Z, pareto):
@@ -95,10 +96,10 @@ def creaFoto(i, F, Z, pareto):
     axisF1 = numpy.amax(F[: , 0])
     axisF2 = numpy.amax(F[: , 1])
     plt.figure(i)
-    plt.plot(pareto[: , 0],pareto[: , 1], 'go')
-    plt.plot(F[: , 0], F[: , 1], 'bo')
-    plt.plot(Z[0], Z[1], 'ro')
-    plt.axis([0, 1, -1, 6])
+    plt.plot(pareto[: , 0],pareto[: , 1], 'g.')
+    plt.plot(F[: , 0], F[: , 1], 'b.')
+    plt.plot(Z[0], Z[1], 'r.')
+    plt.axis([0, 1, -1, 2.5])
     plt.ylabel('f2')
     plt.xlabel('f1')
     plt.suptitle('Generecion ' + str(i))

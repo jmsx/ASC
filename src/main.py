@@ -4,10 +4,10 @@ from funciones import *
 import random
 from tqdm import tqdm
 
-N = 200
+N = 100
 T = 30
 espacio = (0, 1, -2, 2)
-generaciones = 50
+generaciones = 100
 dimension = 30
 CR = 0.5
 Fm = 0.5
@@ -28,6 +28,7 @@ for i in range(0, N):
 vecinos = numpy.empty((N, T))
 for i in range(0, N):
     vecinos[i] = masCercanosA(pesos, pesos[i], T)
+
 
 
 #Genera individuos
@@ -109,7 +110,7 @@ for j in tqdm(range(0, generaciones)):
         for t in vecinos[i]:
             t = int(t)
             #TODO: contar restricciones antes de comparar
-            if g_te(Fy, pesos[t][:], Z)  < agregaciones[t]:
+            if g_te(Fy, pesos[t][:], Z)  < g_te(F[t][:], pesos[t][:], Z):
                 X[t] = y
                 F[t][:] = Fy
 
