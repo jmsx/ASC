@@ -29,11 +29,13 @@ def masCercanosA(matriz, v, n):
     
     return res[:n]
 
-def g_te(F, pesos, Z):
+def g_te(F, pesos, Z, restricciones):
     aux = numpy.empty((len(F),))
     for i in range(0, len(F)):
         aux[i] = pesos[i] * abs(F[i] - Z[i])
-    return numpy.amax(aux)
+    res = numpy.amax(aux)
+    res = penaliza(res, restricciones)
+    return res
 
 def muta_y_cruza(y, v1, v2, v3, espacio, CR, fm, problema):
     v1 = numpy.array(v1)
@@ -130,7 +132,12 @@ def crearFicheroMetricas(N,  generaciones, problema):
 
     mypath = "out/NSGAII_" + problema + "/P" + str(N) + "G" + str(generaciones)
     onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
-    file2 =  mypath + "/" + numpy.random.choice(onlyfiles)
+
+    while True:
+        file2 =  mypath + "/" + numpy.random.choice(onlyfiles)
+        if "all" in file2:
+            break
+
     lineas = [2, 1, 2, file1, N, generaciones, file2, N, generaciones, 1]
     outF = open(salida, "w")
     for line in lineas:
@@ -156,7 +163,16 @@ def ejecutaMetricas(N,  generaciones, problema):
         os.mkdir(folder)
     except:
         pass
-    cmd = "sudo ./METRICS/metrics < out/" + str(N) + "P" + str(generaciones) + "G_" + problema + ".in" #+ " > /dev/null 2>&1"
+    cmd = "sudo ./METRICS/metrics < out/" + str(N) + "P" + str(generaciones) + "G_" + problema + ".in > /dev/null"
     os.system(cmd)
+    folder = '../src' 
+    for the_file in os.listdir(folder):
+        file_path = os.path.join(folder, the_file)
+        try:
+            if os.path.isfile(file_path) and (".out" in file_path):
+                os.unlink(file_path)
+        except:
+            pass
 
-
+def penaliza(res, restricciones):
+    return res + 0.2*restricciones

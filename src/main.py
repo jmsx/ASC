@@ -5,14 +5,14 @@ import random
 from tqdm import tqdm
 
 N = 100
-T = 25
+T = 30
 espacio = (0, 1, -2, 2)
 generaciones = 100
-dimension = 30
+dimension = 16
 CR = 0.5
 Fm = 0.5
 
-problema = "ZDT3"
+problema = "CF6_16D"
 
 #restricciones incumplidas
 restricciones = numpy.zeros((N, 1))
@@ -43,10 +43,10 @@ for i in range(0, len(X)):
     if problema == "ZDT3":
         F[i][0] = ZDT3_f1(X[i][:])
         F[i][1] = ZDT3_f2(X[i][:])
-    elif problema == "CF6":
+    elif "CF6" in problema:
         F[i][0] = CF6_f1(X[i][:])
         F[i][1] = CF6_f2(X[i][:])
-        #TODO: contar restricciones
+        restricciones[i] = cuentaRestricciones(X[i][:])
 
 #Inicializa Z
 Z = F[0][:]
@@ -61,7 +61,7 @@ creaFoto(0, F, Z, pareto)
 #Calculo las agregaciones iniciales
 agregaciones = numpy.empty((N, ))
 for i in range(0, N):
-    agregaciones[i] = g_te(F[i][:], pesos[i][:], Z)
+    agregaciones[i] = g_te(F[i][:], pesos[i][:], Z, restricciones[i])
 
 #Array para el fichero de salida
 lineas = list()
@@ -91,26 +91,24 @@ for j in tqdm(range(0, generaciones)):
         else:
             Fy[0] = CF6_f1(y)
             Fy[1] = CF6_f2(y)
-            #TODO: contar restricciones
+            restricciones[i] = cuentaRestricciones(X[i][:])
 
         Z = numpy.minimum(Fy, Z)
-        F_agregacion = g_te(F[i][:], pesos[i][:], Z)
-        Fy_agregacion = g_te(Fy, pesos[i][:], Z) 
+        F_agregacion = g_te(F[i][:], pesos[i][:], Z, restricciones[i])
+        Fy_agregacion = g_te(Fy, pesos[i][:], Z, restricciones[i]) 
 
-        if "CF6" in problema:
-            pass
-            #TODO: penalizar restricciones
+
 
         #Comparacion del individuo
         if Fy_agregacion < F_agregacion:
             X[i] = y
             F[i][:] = Fy
-            agregaciones[i] = Fy_agregacion
+
         #Altualizando vecinos
         for t in vecinos[i]:
             t = int(t)
             #TODO: contar restricciones antes de comparar
-            if g_te(Fy, pesos[t][:], Z)  < g_te(F[t][:], pesos[t][:], Z):
+            if g_te(Fy, pesos[t][:], Z, restricciones[i])  < g_te(F[t][:], pesos[t][:], Z, restricciones[i]):
                 X[t] = y
                 F[t][:] = Fy
 
