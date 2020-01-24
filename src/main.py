@@ -8,11 +8,11 @@ N = 100
 T = 30
 espacio = (0, 1, -2, 2)
 generaciones = 100
-dimension = 30
+dimension = 4
 CR = 0.5
 Fm = 0.5
-peso_restricciones = 0.2
-problema = "ZDT3"
+peso_restricciones = 0.5
+problema = "CF6_4D"
 
 #restricciones incumplidas
 restricciones = numpy.zeros((N, 1))

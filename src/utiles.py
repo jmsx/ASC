@@ -60,10 +60,10 @@ def muta_y_cruza(y, v1, v2, v3, espacio, CR, fm, problema):
             elif y[i] > espacio[1]:
                 y[i] = espacio[1]
     else:
-        if y[i] < espacio[0]:
-            y[i] = espacio[0]
-        elif y[i] > espacio[1]:
-            y[i] = espacio[1]
+        if y[0] < espacio[0]:
+            y[0] = espacio[0]
+        elif y[0] > espacio[1]:
+            y[0] = espacio[1]
         for i in range(1, len(y)):
             if y[i] < espacio[2]:
                 y[i] = espacio[2]
@@ -201,9 +201,10 @@ def cargaCompetencia(problema, N, generaciones):
     fileobj = open(file1, "r")
     frente = list()
     for line in fileobj.readlines():
-        rip = line.split("	")
-        x = float(rip[0].strip())
-        y = float(rip[1].strip())
-        frente.append([x, y])
+        if "#" not in line:
+            rip = line.split("	")
+            x = float(rip[0].strip())
+            y = float(rip[1].strip())
+            frente.append([x, y])
     frente = numpy.array(frente)
     return frente

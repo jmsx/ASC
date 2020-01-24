@@ -56,9 +56,9 @@ def CF6_y(x):
     
     for i in range(0, n):
         if (i % 2) == 0:
-            res[i] = x[i] - 0.8*math.sin(6*math.pi*x[0] + ((i*math.pi)/n))
+            res[i] = x[i] - 0.8*math.sin(6*math.pi*x[0] + (((i + 1)*math.pi)/n))
         else:
-            res[i] = x[i] - 0.8*math.cos(6*math.pi*x[0] + ((i*math.pi)/n))
+            res[i] = x[i] - 0.8*math.cos(6*math.pi*x[0] + (((i + 1)*math.pi)/n))
     return res
 
 def CF6_R1(x):
