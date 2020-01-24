@@ -93,7 +93,7 @@ def creaGif():
             save_all=True, duration=100, loop=0)
 
 
-def creaFoto(i, F, Z, pareto):
+def creaFoto(i, F, Z, pareto, frente_NS):
     if i == 0:
         folder = 'img/generaciones' 
         for the_file in os.listdir(folder):
@@ -107,6 +107,7 @@ def creaFoto(i, F, Z, pareto):
     axisF2 = numpy.amax(F[: , 1])
     plt.figure(i)
     plt.plot(pareto[: , 0],pareto[: , 1], 'g.')
+    plt.plot(frente_NS[:, 0], frente_NS[:, 1], 'y.')
     plt.plot(F[: , 0], F[: , 1], 'b.')
     plt.plot(Z[0], Z[1], 'r.')
     plt.axis([0, 1, -1, 2.5])
@@ -186,3 +187,23 @@ def ejecutaMetricas(N,  generaciones, problema):
 
 def penaliza(res, restricciones, peso_restricciones):
     return res + peso_restricciones*restricciones
+
+
+
+def cargaCompetencia(problema, N, generaciones):
+    mypath = "out/NSGAII_" + problema + "/P" + str(N) + "G" + str(generaciones)
+    onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+
+    while True:
+        file1 =  mypath + "/" + numpy.random.choice(onlyfiles)
+        if "final" in file1:
+            break
+    fileobj = open(file1, "r")
+    frente = list()
+    for line in fileobj.readlines():
+        rip = line.split("	")
+        x = float(rip[0].strip())
+        y = float(rip[1].strip())
+        frente.append([x, y])
+    frente = numpy.array(frente)
+    return frente

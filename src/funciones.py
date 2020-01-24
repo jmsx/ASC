@@ -2,6 +2,7 @@ import math
 import numpy
 
 
+
 def ZDT3_f1(X):
     return X[0]
 def ZDT3_f2(X):
@@ -75,3 +76,4 @@ def cuentaRestricciones(X):
     if CF6_R2(X):
         res += 1
     return res
+

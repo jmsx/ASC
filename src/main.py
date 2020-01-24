@@ -55,10 +55,14 @@ Z = F[0][:]
 for i in range(0, len(F)):
     Z = numpy.minimum(F[i][:], Z)
 
-
+#CargaFrente competencia
+frente_NS = cargaCompetencia(problema, N, generaciones)
 #Cargar el frente de pareto
 pareto = cargaPareto(problema)
-creaFoto(0, F, Z, pareto)
+creaFoto(0, F, Z, pareto, frente_NS)
+
+
+
 
 #Calculo las agregaciones iniciales
 agregaciones = numpy.empty((N, ))
@@ -115,7 +119,7 @@ for j in tqdm(range(0, generaciones)):
                 F[t][:] = Fy
 
     #Generando grafica de la generacion
-    creaFoto(j + 1, F, Z, pareto)
+    creaFoto(j + 1, F, Z, pareto, frente_NS)
 
 #Escribiendo fichero de salida
 escribirSalida(lineas, N, generaciones, problema)
