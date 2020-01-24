@@ -8,11 +8,11 @@ N = 100
 T = 30
 espacio = (0, 1, -2, 2)
 generaciones = 100
-dimension = 16
+dimension = 30
 CR = 0.5
 Fm = 0.5
-
-problema = "CF6_16D"
+peso_restricciones = 0.2
+problema = "ZDT3"
 
 #restricciones incumplidas
 restricciones = numpy.zeros((N, 1))
@@ -36,6 +36,8 @@ X = numpy.empty((N, dimension))
 for i in range(0, N):
     for j in range(0, dimension):
         X[i][j] = numpy.random.random_sample()
+        if ("CF6" in problema) and (j != 0):
+            X[i][j] = (espacio[3] - espacio[2]) * numpy.random.random_sample() + espacio[2]
 
 #Evalua funciones
 F = numpy.empty((N, 2))
@@ -61,7 +63,7 @@ creaFoto(0, F, Z, pareto)
 #Calculo las agregaciones iniciales
 agregaciones = numpy.empty((N, ))
 for i in range(0, N):
-    agregaciones[i] = g_te(F[i][:], pesos[i][:], Z, restricciones[i])
+    agregaciones[i] = g_te(F[i][:], pesos[i][:], Z, restricciones[i], peso_restricciones)
 
 #Array para el fichero de salida
 lineas = list()
@@ -94,8 +96,8 @@ for j in tqdm(range(0, generaciones)):
             restricciones[i] = cuentaRestricciones(X[i][:])
 
         Z = numpy.minimum(Fy, Z)
-        F_agregacion = g_te(F[i][:], pesos[i][:], Z, restricciones[i])
-        Fy_agregacion = g_te(Fy, pesos[i][:], Z, restricciones[i]) 
+        F_agregacion = g_te(F[i][:], pesos[i][:], Z, restricciones[i], peso_restricciones)
+        Fy_agregacion = g_te(Fy, pesos[i][:], Z, restricciones[i], peso_restricciones) 
 
 
 
@@ -108,7 +110,7 @@ for j in tqdm(range(0, generaciones)):
         for t in vecinos[i]:
             t = int(t)
             #TODO: contar restricciones antes de comparar
-            if g_te(Fy, pesos[t][:], Z, restricciones[i])  < g_te(F[t][:], pesos[t][:], Z, restricciones[i]):
+            if g_te(Fy, pesos[t][:], Z, restricciones[i], peso_restricciones)  < g_te(F[t][:], pesos[t][:], Z, restricciones[i], peso_restricciones):
                 X[t] = y
                 F[t][:] = Fy
 

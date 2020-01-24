@@ -29,12 +29,12 @@ def masCercanosA(matriz, v, n):
     
     return res[:n]
 
-def g_te(F, pesos, Z, restricciones):
+def g_te(F, pesos, Z, restricciones, peso_restricciones):
     aux = numpy.empty((len(F),))
     for i in range(0, len(F)):
         aux[i] = pesos[i] * abs(F[i] - Z[i])
     res = numpy.amax(aux)
-    res = penaliza(res, restricciones)
+    res = penaliza(res, restricciones, peso_restricciones)
     return res
 
 def muta_y_cruza(y, v1, v2, v3, espacio, CR, fm, problema):
@@ -50,7 +50,7 @@ def muta_y_cruza(y, v1, v2, v3, espacio, CR, fm, problema):
         if rnd <= CR:
             y[i] = v[i]
 
-    y = mutacion_gausiana(y, espacio)
+    y = mutacion_gausiana(y, espacio, problema)
 
     #Ajustando al espacio de busqueda
     if problema == "ZDT3":
@@ -72,12 +72,16 @@ def muta_y_cruza(y, v1, v2, v3, espacio, CR, fm, problema):
 
     return y 
 
-def mutacion_gausiana(y, espacio):
+def mutacion_gausiana(y, espacio, problema):
     o = (espacio[1] - espacio[0]) / 20.0
+    o_aux = (espacio[3] - espacio[2]) / 20.0
     for i in range(0, len(y)):
         rnd = numpy.random.random_sample()
         if rnd <= (1/len(y)):
-            y[i] +=  numpy.random.normal(0.0, o)
+            if ("CF6" in problema) and (i != 0):
+                y[i] +=  numpy.random.normal(0.0, o_aux)
+            else:
+                y[i] +=  numpy.random.normal(0.0, o)
     return y
 
 def creaGif():
@@ -115,6 +119,7 @@ def creaFoto(i, F, Z, pareto):
 
 def escribirSalida(lineas, N, generaciones, problema):
     salida = "out/" + problema + "/" + str(N) + "P" + str(generaciones) + "G.out"
+    salida_final = "out/" + problema + "/" + str(N) + "P" + str(generaciones) + "G_final.out"
 
     try:
         os.mkdir("out/" + problema)
@@ -123,6 +128,11 @@ def escribirSalida(lineas, N, generaciones, problema):
 
     outF = open(salida, "w")
     for line in lineas:
+        outF.write(line + "\n")
+    outF.close()
+
+    outF = open(salida_final, "w")
+    for line in lineas[N*(generaciones-1):]:
         outF.write(line + "\n")
     outF.close()
 
@@ -174,5 +184,5 @@ def ejecutaMetricas(N,  generaciones, problema):
         except:
             pass
 
-def penaliza(res, restricciones):
-    return res + 0.2*restricciones
+def penaliza(res, restricciones, peso_restricciones):
+    return res + peso_restricciones*restricciones
