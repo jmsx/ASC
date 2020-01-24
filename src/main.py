@@ -5,14 +5,15 @@ import random
 from tqdm import tqdm
 
 N = 100
-T = 30
+T = 10
 espacio = (0, 1, -2, 2)
 generaciones = 100
-dimension = 4
+dimension = 16
 CR = 0.5
 Fm = 0.5
-peso_restricciones = 0.5
-problema = "CF6_4D"
+peso_restricciones = 10
+problema = "CF6_16D"
+SIG = 10
 
 #restricciones incumplidas
 restricciones = numpy.zeros((N, 1))
@@ -89,7 +90,7 @@ for j in tqdm(range(0, generaciones)):
             if (v1 is not v2) and (v2 is not v3):
                 break
         
-        y = muta_y_cruza(X[i] ,v1, v2, v3, espacio, CR , Fm, problema)
+        y = muta_y_cruza(X[i] ,v1, v2, v3, espacio, CR , Fm, problema, SIG)
         Fy = numpy.empty((2,))
         if problema == "ZDT3":
             Fy[0] = ZDT3_f1(y)
@@ -127,3 +128,5 @@ crearFicheroMetricas(N,  generaciones, problema)
 ejecutaMetricas(N,  generaciones, problema)
 #Generando animacion con las distintas generaciones
 creaGif()
+#Añadiendo minimos al archivo de estadisticas
+guardaEstadistica(Z, N, generaciones, problema)

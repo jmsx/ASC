@@ -37,7 +37,7 @@ def g_te(F, pesos, Z, restricciones, peso_restricciones):
     res = penaliza(res, restricciones, peso_restricciones)
     return res
 
-def muta_y_cruza(y, v1, v2, v3, espacio, CR, fm, problema):
+def muta_y_cruza(y, v1, v2, v3, espacio, CR, fm, problema, SIG):
     v1 = numpy.array(v1)
     v2 = numpy.array(v2)
     v3 = numpy.array(v3)
@@ -50,7 +50,7 @@ def muta_y_cruza(y, v1, v2, v3, espacio, CR, fm, problema):
         if rnd <= CR:
             y[i] = v[i]
 
-    y = mutacion_gausiana(y, espacio, problema)
+    y = mutacion_gausiana(y, espacio, problema, SIG)
 
     #Ajustando al espacio de busqueda
     if problema == "ZDT3":
@@ -72,9 +72,10 @@ def muta_y_cruza(y, v1, v2, v3, espacio, CR, fm, problema):
 
     return y 
 
-def mutacion_gausiana(y, espacio, problema):
-    o = (espacio[1] - espacio[0]) / 20.0
-    o_aux = (espacio[3] - espacio[2]) / 20.0
+def mutacion_gausiana(y, espacio, problema, SIG):
+    
+    o = (espacio[1] - espacio[0]) / SIG
+    o_aux = (espacio[3] - espacio[2]) / SIG
     for i in range(0, len(y)):
         rnd = numpy.random.random_sample()
         if rnd <= (1/len(y)):
@@ -107,10 +108,11 @@ def creaFoto(i, F, Z, pareto, frente_NS):
     axisF2 = numpy.amax(F[: , 1])
     plt.figure(i)
     plt.plot(pareto[: , 0],pareto[: , 1], 'g.')
-    plt.plot(frente_NS[:, 0], frente_NS[:, 1], 'y.')
+    if len(frente_NS )!= 0:
+        plt.plot(frente_NS[:, 0], frente_NS[:, 1], 'y.')
     plt.plot(F[: , 0], F[: , 1], 'b.')
     plt.plot(Z[0], Z[1], 'r.')
-    plt.axis([0, 1, -1, 2.5])
+    plt.axis([0, 1, -1, 6])
     plt.ylabel('f2')
     plt.xlabel('f1')
     plt.suptitle('Generecion ' + str(i))
@@ -140,16 +142,18 @@ def escribirSalida(lineas, N, generaciones, problema):
 def crearFicheroMetricas(N,  generaciones, problema):
     salida = "out/" + str(N) + "P" + str(generaciones) + "G_" + problema + ".in"
     file1 = "out/" + problema + "/" + str(N) + "P" + str(generaciones) + "G.out"
+    try:
+        mypath = "out/NSGAII_" + problema + "/P" + str(N) + "G" + str(generaciones)
+        onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
 
-    mypath = "out/NSGAII_" + problema + "/P" + str(N) + "G" + str(generaciones)
-    onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+        while True:
+            file2 =  mypath + "/" + numpy.random.choice(onlyfiles)
+            if "all" in file2:
+                break
 
-    while True:
-        file2 =  mypath + "/" + numpy.random.choice(onlyfiles)
-        if "all" in file2:
-            break
-
-    lineas = [2, 1, 2, file1, N, generaciones, file2, N, generaciones, 1]
+        lineas = [2, 1, 2, file1, N, generaciones, file2, N, generaciones, 1]
+    except:
+        lineas = [1, 1, 2, file1, N, generaciones]
     outF = open(salida, "w")
     for line in lineas:
         outF.write(str(line) + "\n")
@@ -191,20 +195,31 @@ def penaliza(res, restricciones, peso_restricciones):
 
 
 def cargaCompetencia(problema, N, generaciones):
-    mypath = "out/NSGAII_" + problema + "/P" + str(N) + "G" + str(generaciones)
-    onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+    try:
+        mypath = "out/NSGAII_" + problema + "/P" + str(N) + "G" + str(generaciones)
+        onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
 
-    while True:
-        file1 =  mypath + "/" + numpy.random.choice(onlyfiles)
-        if "final" in file1:
-            break
-    fileobj = open(file1, "r")
-    frente = list()
-    for line in fileobj.readlines():
-        if "#" not in line:
-            rip = line.split("	")
-            x = float(rip[0].strip())
-            y = float(rip[1].strip())
-            frente.append([x, y])
-    frente = numpy.array(frente)
+        while True:
+            file1 =  mypath + "/" + numpy.random.choice(onlyfiles)
+            if "final" in file1:
+                break
+        fileobj = open(file1, "r")
+        frente = list()
+        for line in fileobj.readlines():
+            if "#" not in line:
+                rip = line.split("	")
+                x = float(rip[0].strip())
+                y = float(rip[1].strip())
+                frente.append([x, y])
+        frente = numpy.array(frente)
+    except:
+        frente = []
     return frente
+
+def guardaEstadistica(Z, N, generaciones, problema):
+    fichero = "estadisticas/" + str(problema) + "/" + str(N) + "P" + str(generaciones) + "G.csv" 
+    existe = os.path.isfile(fichero) 
+    with open(fichero, "a+") as myfile:
+        if not existe:
+            myfile.write("F1;F2\n")
+        myfile.write(str(Z[0]) + ";" + str(Z[1]) + "\n")

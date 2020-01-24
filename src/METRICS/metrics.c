@@ -708,7 +708,7 @@ if(nexecutions==1)
 fprintf(gp1, "set terminal png size 800,600\n set output 'img/metricas/%dP%dG/hypervolumen.png'\nset title 'Hypervolume'\n plot 'hypervol.out' title 'front %dP%dG' w lines\n set xlabel 'ngen'\nset ylabel 'hypervolume'\n", popsizeA, ngenA, popsizeA, ngenA);
 /* fprintf(gp2,"set title 'Extent'\n plot 'extent.out' using 1:2 title 'front 1' w lines\n set xlabel 'ngen'\nset ylabel 'extent'\n");
   */
-fprintf(gp3,"set terminal png size 800,600\n set output 'img/metricas/metricas/%dP%dG/spacing.png'\nset title 'Spacing'\n plot 'spacing.out' using 1:2 title 'front %dP%dG' w lines\n set xlabel 'ngen'\nset ylabel 'spacing'\n", popsizeA, ngenA, popsizeA, ngenA);
+fprintf(gp3,"set terminal png size 800,600\n set output 'img/metricas/%dP%dG/spacing.png'\nset title 'Spacing'\n plot 'spacing.out' using 1:2 title 'front %dP%dG' w lines\n set xlabel 'ngen'\nset ylabel 'spacing'\n", popsizeA, ngenA, popsizeA, ngenA);
 }
 if(nexecutions==2)  
 {
