@@ -5,15 +5,15 @@ import random
 from tqdm import tqdm
 
 N = 100
-T = 10
+T = 30
 espacio = (0, 1, -2, 2)
 generaciones = 100
 dimension = 16
 CR = 0.5
 Fm = 0.5
-peso_restricciones = 10
+peso_restricciones = 0
 problema = "CF6_16D"
-SIG = 10
+SIG = 5
 
 #restricciones incumplidas
 restricciones = numpy.zeros((N, 1))
@@ -81,6 +81,12 @@ for j in tqdm(range(0, generaciones)):
     for i in range(0, N):
          lineas.append(str(F[i][0]) + "	" + str(F[i][1]) + "	" + str(float(restricciones[i])))
 
+
+
+    #Cambio de SIG
+    aux1  = numpy.array(X)
+
+
     #Evolucionando
     for i in range(0, N):
         while True:
@@ -98,11 +104,10 @@ for j in tqdm(range(0, generaciones)):
         else:
             Fy[0] = CF6_f1(y)
             Fy[1] = CF6_f2(y)
-            restricciones[i] = cuentaRestricciones(X[i][:])
 
         Z = numpy.minimum(Fy, Z)
-        F_agregacion = g_te(F[i][:], pesos[i][:], Z, restricciones[i], peso_restricciones)
-        Fy_agregacion = g_te(Fy, pesos[i][:], Z, restricciones[i], peso_restricciones) 
+        F_agregacion = g_te(F[i][:], pesos[i][:], Z, cuentaRestricciones(X[i]), peso_restricciones)
+        Fy_agregacion = g_te(Fy, pesos[i][:], Z, cuentaRestricciones(y), peso_restricciones) 
 
 
 
@@ -111,16 +116,38 @@ for j in tqdm(range(0, generaciones)):
             X[i] = y
             F[i][:] = Fy
 
+        restricciones[i] = cuentaRestricciones(X[i])
+
         #Altualizando vecinos
         for t in vecinos[i]:
             t = int(t)
             #TODO: contar restricciones antes de comparar
-            if g_te(Fy, pesos[t][:], Z, restricciones[i], peso_restricciones)  < g_te(F[t][:], pesos[t][:], Z, restricciones[i], peso_restricciones):
+            if g_te(Fy, pesos[t][:], Z, cuentaRestricciones(y), peso_restricciones)  < g_te(F[t][:], pesos[t][:], Z, cuentaRestricciones(X[t]), peso_restricciones):
                 X[t] = y
                 F[t][:] = Fy
+                restricciones[t] = cuentaRestricciones(X[t])
+
+
+
+    #Variacion de SIG
+    diff = aux1 - X
+    contador = 0
+    for e in numpy.nditer(diff):
+        if e == 0:
+            contador += 1
+    try:
+        contador = float(contador / math.pow(N, 2))
+        SIG = (5)*contador + 5
+    except:
+        SIG = 5
+    
+
+    
 
     #Generando grafica de la generacion
+
     creaFoto(j + 1, F, Z, pareto, frente_NS)
+
 
 #Escribiendo fichero de salida
 escribirSalida(lineas, N, generaciones, problema)
