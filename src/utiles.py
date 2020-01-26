@@ -115,7 +115,7 @@ def creaFoto(i, F, Z, pareto, frente_NS):
     plt.axis([0, 1, -1, 6])
     plt.ylabel('f2')
     plt.xlabel('f1')
-    plt.suptitle('Generecion ' + str(i))
+    plt.suptitle('Generacion ' + str(i))
     num = '{:05d}'.format(i)
     plt.savefig('img/generaciones/grafica-' + num + '.png')
     plt.close()

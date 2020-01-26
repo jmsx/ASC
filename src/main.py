@@ -11,7 +11,7 @@ generaciones = 100
 dimension = 16
 CR = 0.5
 Fm = 0.5
-peso_restricciones = 0
+peso_restricciones = 0.2
 problema = "CF6_16D"
 SIG = 5
 
