@@ -11,7 +11,7 @@ generaciones = 100
 dimension = 16
 CR = 0.5
 Fm = 0.5
-peso_restricciones = 0.2
+peso_restricciones = 1
 problema = "CF6_16D"
 SIG = 5
 
@@ -97,6 +97,7 @@ for j in tqdm(range(0, generaciones)):
                 break
         
         y = muta_y_cruza(X[i] ,v1, v2, v3, espacio, CR , Fm, problema, SIG)
+
         Fy = numpy.empty((2,))
         if problema == "ZDT3":
             Fy[0] = ZDT3_f1(y)
@@ -106,6 +107,7 @@ for j in tqdm(range(0, generaciones)):
             Fy[1] = CF6_f2(y)
 
         Z = numpy.minimum(Fy, Z)
+
         F_agregacion = g_te(F[i][:], pesos[i][:], Z, cuentaRestricciones(X[i]), peso_restricciones)
         Fy_agregacion = g_te(Fy, pesos[i][:], Z, cuentaRestricciones(y), peso_restricciones) 
 
@@ -121,7 +123,6 @@ for j in tqdm(range(0, generaciones)):
         #Altualizando vecinos
         for t in vecinos[i]:
             t = int(t)
-            #TODO: contar restricciones antes de comparar
             if g_te(Fy, pesos[t][:], Z, cuentaRestricciones(y), peso_restricciones)  < g_te(F[t][:], pesos[t][:], Z, cuentaRestricciones(X[t]), peso_restricciones):
                 X[t] = y
                 F[t][:] = Fy
@@ -130,6 +131,7 @@ for j in tqdm(range(0, generaciones)):
 
 
     #Variacion de SIG
+    """
     diff = aux1 - X
     contador = 0
     for e in numpy.nditer(diff):
@@ -140,8 +142,7 @@ for j in tqdm(range(0, generaciones)):
         SIG = (5)*contador + 5
     except:
         SIG = 5
-    
-
+    """
     
 
     #Generando grafica de la generacion

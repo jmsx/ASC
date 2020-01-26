@@ -8,6 +8,7 @@ from shutil import rmtree
 from tqdm import tqdm
 from os import listdir
 from os.path import isfile, join
+from funciones import *
 
 
 
@@ -34,7 +35,7 @@ def g_te(F, pesos, Z, restricciones, peso_restricciones):
     for i in range(0, len(F)):
         aux[i] = pesos[i] * abs(F[i] - Z[i])
     res = numpy.amax(aux)
-    res = penaliza(res, restricciones, peso_restricciones)
+    res += peso_restricciones*restricciones
     return res
 
 def muta_y_cruza(y, v1, v2, v3, espacio, CR, fm, problema, SIG):
@@ -112,7 +113,7 @@ def creaFoto(i, F, Z, pareto, frente_NS):
         plt.plot(frente_NS[:, 0], frente_NS[:, 1], 'y.')
     plt.plot(F[: , 0], F[: , 1], 'b.')
     plt.plot(Z[0], Z[1], 'r.')
-    plt.axis([0, 1, -1, 6])
+    plt.axis([0, 1, -1, 2])
     plt.ylabel('f2')
     plt.xlabel('f1')
     plt.suptitle('Generacion ' + str(i))
@@ -189,8 +190,7 @@ def ejecutaMetricas(N,  generaciones, problema):
         except:
             pass
 
-def penaliza(res, restricciones, peso_restricciones):
-    return res + peso_restricciones*restricciones
+
 
 
 
@@ -223,3 +223,4 @@ def guardaEstadistica(Z, N, generaciones, problema):
         if not existe:
             myfile.write("F1;F2\n")
         myfile.write(str(Z[0]) + ";" + str(Z[1]) + "\n")
+

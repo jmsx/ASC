@@ -39,26 +39,26 @@ def cargaPareto(problema):
 def CF6_f1(x):
     res = x[0]
     y = CF6_y(x)
-    for _y in y[2::2]:
+    for _y in y[1::2]:
         res += pow(_y, 2)
     return res
 
 def CF6_f2(x):
     res = pow((1 - x[0]), 2)
     y = CF6_y(x)
-    for _y in y[1::2]:
+    for _y in y[0::2]:
         res += pow(_y, 2)
     return res
 
 def CF6_y(x):
     n = len(x)
-    res = numpy.empty((n,))
+    res = numpy.zeros((n - 1,))
     
-    for i in range(0, n):
-        if (i % 2) == 0:
-            res[i] = x[i] - 0.8*math.sin(6*math.pi*x[0] + (((i + 1)*math.pi)/n))
+    for j in range(2, n + 1):
+        if (j % 2) == 0:
+            res[j - 2] = x[j- 1] - 0.8*x[0]*math.sin(6*math.pi*x[0] + ((j*math.pi)/n))
         else:
-            res[i] = x[i] - 0.8*math.cos(6*math.pi*x[0] + (((i + 1)*math.pi)/n))
+            res[j - 2] = x[j - 1] - 0.8*x[0]*math.cos(6*math.pi*x[0] + ((j*math.pi)/n))
     return res
 
 def CF6_R1(x):
@@ -67,7 +67,7 @@ def CF6_R1(x):
 
 def CF6_R2(x):
     n = len(x)
-    return x[3] - 0.8*x[0]*math.sin(6*math.pi*x[0] + ((4*math.pi)/n)) - numpy.sign(0.25*math.sqrt(1-x[0]) - (1 - x[0]))*math.sqrt(abs(0.25*math.sqrt(1-x[0]) - (1 - x[0]))) >= 0
+    return x[3] - 0.8*x[0]*math.sin(6*math.pi*x[0] + ((4*math.pi)/n)) - numpy.sign(0.25*math.sqrt(1-x[0]) - 0.5*(1 - x[0]))*math.sqrt(abs(0.25*math.sqrt(1-x[0]) - 0.5*(1 - x[0]))) >= 0
 
 def cuentaRestricciones(X):
     res = 0
