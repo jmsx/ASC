@@ -11,9 +11,9 @@ generaciones = 100
 dimension = 16
 CR = 0.5
 Fm = 0.5
-peso_restricciones = 1
+peso_restricciones = 0.2
 problema = "CF6_16D"
-SIG = 5
+SIG = 20
 
 #restricciones incumplidas
 restricciones = numpy.zeros((N, 1))
@@ -49,7 +49,6 @@ for i in range(0, len(X)):
     elif "CF6" in problema:
         F[i][0] = CF6_f1(X[i][:])
         F[i][1] = CF6_f2(X[i][:])
-        restricciones[i] = cuentaRestricciones(X[i][:])
 
 #Inicializa Z
 Z = F[0][:]
@@ -68,7 +67,7 @@ creaFoto(0, F, Z, pareto, frente_NS)
 #Calculo las agregaciones iniciales
 agregaciones = numpy.empty((N, ))
 for i in range(0, N):
-    agregaciones[i] = g_te(F[i][:], pesos[i][:], Z, restricciones[i], peso_restricciones)
+    agregaciones[i] = g_te(F[i][:], pesos[i][:], Z, cuentaRestricciones(X[i][:], problema), peso_restricciones)
 
 #Array para el fichero de salida
 lineas = list()
@@ -79,7 +78,7 @@ for j in tqdm(range(0, generaciones)):
 
     #Generando lineas para el archivo de salida
     for i in range(0, N):
-         lineas.append(str(F[i][0]) + "	" + str(F[i][1]) + "	" + str(float(restricciones[i])))
+         lineas.append(str(F[i][0]) + "	" + str(F[i][1]) + "	" + str(float(cuentaRestricciones(X[i][:], problema))))
 
 
 
@@ -108,8 +107,8 @@ for j in tqdm(range(0, generaciones)):
 
         Z = numpy.minimum(Fy, Z)
 
-        F_agregacion = g_te(F[i][:], pesos[i][:], Z, cuentaRestricciones(X[i]), peso_restricciones)
-        Fy_agregacion = g_te(Fy, pesos[i][:], Z, cuentaRestricciones(y), peso_restricciones) 
+        F_agregacion = g_te(F[i][:], pesos[i][:], Z, cuentaRestricciones(X[i], problema), peso_restricciones)
+        Fy_agregacion = g_te(Fy, pesos[i][:], Z, cuentaRestricciones(y,problema), peso_restricciones) 
 
 
 
@@ -118,15 +117,13 @@ for j in tqdm(range(0, generaciones)):
             X[i] = y
             F[i][:] = Fy
 
-        restricciones[i] = cuentaRestricciones(X[i])
 
         #Altualizando vecinos
         for t in vecinos[i]:
             t = int(t)
-            if g_te(Fy, pesos[t][:], Z, cuentaRestricciones(y), peso_restricciones)  < g_te(F[t][:], pesos[t][:], Z, cuentaRestricciones(X[t]), peso_restricciones):
+            if g_te(Fy, pesos[t][:], Z, cuentaRestricciones(y, problema), peso_restricciones)  < g_te(F[t][:], pesos[t][:], Z, cuentaRestricciones(X[t], problema), peso_restricciones):
                 X[t] = y
                 F[t][:] = Fy
-                restricciones[t] = cuentaRestricciones(X[t])
 
 
 

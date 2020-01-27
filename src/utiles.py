@@ -9,7 +9,15 @@ from tqdm import tqdm
 from os import listdir
 from os.path import isfile, join
 from funciones import *
+import decimal
 
+
+
+def float_to_str(f):
+    ctx = decimal.Context()
+    ctx.prec = 20
+    d1 = ctx.create_decimal(repr(f))
+    return format(d1, 'f')
 
 
 def distanciaEuclidea(v1, v2):
@@ -222,5 +230,5 @@ def guardaEstadistica(Z, N, generaciones, problema):
     with open(fichero, "a+") as myfile:
         if not existe:
             myfile.write("F1;F2\n")
-        myfile.write(str(Z[0]) + ";" + str(Z[1]) + "\n")
+        myfile.write(float_to_str(Z[0]) + ";" + float_to_str(Z[1]) + "\n")
 

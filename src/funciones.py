@@ -69,11 +69,12 @@ def CF6_R2(x):
     n = len(x)
     return x[3] - 0.8*x[0]*math.sin(6*math.pi*x[0] + ((4*math.pi)/n)) - numpy.sign(0.25*math.sqrt(1-x[0]) - 0.5*(1 - x[0]))*math.sqrt(abs(0.25*math.sqrt(1-x[0]) - 0.5*(1 - x[0]))) >= 0
 
-def cuentaRestricciones(X):
+def cuentaRestricciones(X, problema):
     res = 0
-    if CF6_R1(X):
-        res += 1
-    if CF6_R2(X):
-        res += 1
+    if "CF6" in problema:
+        if not CF6_R1(X):
+            res += 1
+        if not CF6_R2(X):
+            res += 1
     return res
 
