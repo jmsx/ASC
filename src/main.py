@@ -82,9 +82,6 @@ for j in tqdm(range(0, generaciones)):
 
 
 
-    #Cambio de SIG
-    aux1  = numpy.array(X)
-
 
     #Evolucionando
     for i in range(0, N):
@@ -128,17 +125,8 @@ for j in tqdm(range(0, generaciones)):
 
 
     #Variacion de SIG
-    contador = 0
-    for i in range(N):
-        if not numpy.array_equal(aux1[i][:], X[i][:]):
-            contador += 1
-
-    try:
-        contador = float(contador / N)
-        SIG = (15)*(1 - contador) + 5
-    except:
-        SIG = 5
-    print(SIG)
+    SIG = 15*((j/N)) + 5
+    print("Percentaje " + str((j/N)) + " SIG=" + str(SIG))
     
     
 
