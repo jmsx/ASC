@@ -13,7 +13,7 @@ CR = 0.5
 Fm = 0.5
 peso_restricciones = 0.2
 problema = "CF6_16D"
-SIG = 20
+SIG = 5
 
 #restricciones incumplidas
 restricciones = numpy.zeros((N, 1))
@@ -128,18 +128,18 @@ for j in tqdm(range(0, generaciones)):
 
 
     #Variacion de SIG
-    """
-    diff = aux1 - X
     contador = 0
-    for e in numpy.nditer(diff):
-        if e == 0:
+    for i in range(N):
+        if not numpy.array_equal(aux1[i][:], X[i][:]):
             contador += 1
+
     try:
-        contador = float(contador / math.pow(N, 2))
-        SIG = (5)*contador + 5
+        contador = float(contador / N)
+        SIG = (15)*(1 - contador) + 5
     except:
         SIG = 5
-    """
+    print(SIG)
+    
     
 
     #Generando grafica de la generacion
